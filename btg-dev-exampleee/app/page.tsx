@@ -20,7 +20,7 @@ export default function Home() {
     isDiscoverable: false
   });
   const [athleteData, setAthleteData] = useState({
-    roleType: [],
+    roleType: "",
     sports: [],
     competitionLevel: "",
     currentGoals: [],
@@ -28,10 +28,35 @@ export default function Home() {
     platformExpectations: ""
   });
   const [investorData, setInvestorData] = useState({
+    roleType: "",
     sectors: [],
     investmentStages: [],
     openToActivities: [],
     connectionInterests: [],
+    platformGoals: ""
+  });
+  const [entrepreneurData, setEntrepreneurData] = useState({
+    roleType: "",
+    hasBusinessOrIdea: "",
+    businessSectors: [],
+    elevatorPitch: "",
+    supportNeeds: [],
+    platformGoals: ""
+  });
+  const [philanthropicData, setPhilanthropicData] = useState({
+    roleType: "",
+    organizationCauses: [],
+    involvementMethods: [],
+    connectionTargets: [],
+    collaborationInterest: "",
+    platformGoals: ""
+  });
+  const [coachData, setCoachData] = useState({
+    roleType: "",
+    coachingLevels: [],
+    sports: [],
+    interests: [],
+    privateTrainingInterest: "",
     platformGoals: ""
   });
 
@@ -54,6 +79,7 @@ export default function Home() {
   const handleAthleteInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
+      
       setAthleteData(prev => ({
         ...prev,
         [name]: checked 
@@ -85,6 +111,57 @@ export default function Home() {
     }
   };
 
+  const handleEntrepreneurInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setEntrepreneurData(prev => ({
+        ...prev,
+        [name]: checked 
+          ? [...prev[name as keyof typeof prev] as string[], value]
+          : (prev[name as keyof typeof prev] as string[]).filter(item => item !== value)
+      }));
+    } else {
+      setEntrepreneurData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handlePhilanthropicInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setPhilanthropicData(prev => ({
+        ...prev,
+        [name]: checked 
+          ? [...prev[name as keyof typeof prev] as string[], value]
+          : (prev[name as keyof typeof prev] as string[]).filter(item => item !== value)
+      }));
+    } else {
+      setPhilanthropicData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleCoachInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setCoachData(prev => ({
+        ...prev,
+        [name]: checked 
+          ? [...prev[name as keyof typeof prev] as string[], value]
+          : (prev[name as keyof typeof prev] as string[]).filter(item => item !== value)
+      }));
+    } else {
+      setCoachData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
@@ -92,6 +169,12 @@ export default function Home() {
       setCurrentStep("athlete-questionnaire");
     } else if (formData.userType === "venture-capitalist") {
       setCurrentStep("investor-questionnaire");
+    } else if (formData.userType === "business-owner") {
+      setCurrentStep("entrepreneur-questionnaire");
+    } else if (formData.userType === "philanthropic-leader") {
+      setCurrentStep("philanthropic-questionnaire");
+    } else if (formData.userType === "coach") {
+      setCurrentStep("coach-questionnaire");
     } else {
       setCurrentStep("profile");
     }
@@ -109,6 +192,24 @@ export default function Home() {
     setCurrentStep("profile");
   };
 
+  const handleEntrepreneurSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Entrepreneur questionnaire submitted:", entrepreneurData);
+    setCurrentStep("profile");
+  };
+
+  const handlePhilanthropicSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Philanthropic questionnaire submitted:", philanthropicData);
+    setCurrentStep("profile");
+  };
+
+  const handleCoachSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Coach questionnaire submitted:", coachData);
+    setCurrentStep("profile");
+  };
+
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (profileData.password !== profileData.confirmPassword) {
@@ -119,7 +220,10 @@ export default function Home() {
       ...formData, 
       ...profileData, 
       ...(formData.userType === "athlete" ? athleteData : {}),
-      ...(formData.userType === "venture-capitalist" ? investorData : {})
+      ...(formData.userType === "venture-capitalist" ? investorData : {}),
+      ...(formData.userType === "business-owner" ? entrepreneurData : {}),
+      ...(formData.userType === "philanthropic-leader" ? philanthropicData : {}),
+      ...(formData.userType === "coach" ? coachData : {})
     });
   };
 
@@ -278,24 +382,22 @@ export default function Home() {
             
             <form onSubmit={handleAthleteSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label htmlFor="athleteRoleType" className="block text-sm font-medium text-gray-700 mb-1">
                   Primary Role Type: *
                 </label>
-                <div className="space-y-2">
-                  {["Current", "Former", "Both"].map(role => (
-                    <label key={role} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="roleType"
-                        value={role}
-                        checked={athleteData.roleType.includes(role)}
-                        onChange={handleAthleteInputChange}
-                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <span className="text-sm text-gray-700">{role}</span>
-                    </label>
-                  ))}
-                </div>
+                <select
+                  id="athleteRoleType"
+                  name="roleType"
+                  value={athleteData.roleType}
+                  onChange={handleAthleteInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select role type</option>
+                  <option value="Current">Current</option>
+                  <option value="Former">Former</option>
+                  <option value="Both">Both</option>
+                </select>
               </div>
 
               <div>
@@ -519,6 +621,24 @@ export default function Home() {
             <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Tell us about your investment interests</h1>
             
             <form onSubmit={handleInvestorSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+              <div>
+                <label htmlFor="investorRoleType" className="block text-sm font-medium text-gray-700 mb-1">
+                  Primary Role Type: *
+                </label>
+                <select
+                  id="investorRoleType"
+                  name="roleType"
+                  value={investorData.roleType}
+                  onChange={handleInvestorInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select role type</option>
+                  <option value="Investor">Investor</option>
+                  <option value="VC">VC</option>
+                </select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   What sectors are you interested in investing in? *
@@ -754,6 +874,645 @@ export default function Home() {
                   name="platformGoals"
                   value={investorData.platformGoals}
                   onChange={handleInvestorInputChange}
+                  required
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition-colors duration-200"
+              >
+                Continue to Profile Setup
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {currentStep === "entrepreneur-questionnaire" && (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl">
+            <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Tell us about your business</h1>
+            
+            <form onSubmit={handleEntrepreneurSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+              <div>
+                <label htmlFor="roleType" className="block text-sm font-medium text-gray-700 mb-1">
+                  Primary Role Type: *
+                </label>
+                <select
+                  id="roleType"
+                  name="roleType"
+                  value={entrepreneurData.roleType}
+                  onChange={handleEntrepreneurInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select role type</option>
+                  <option value="Current Owner">Current Owner</option>
+                  <option value="Early-Stage">Early-Stage</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="hasBusinessOrIdea" className="block text-sm font-medium text-gray-700 mb-1">
+                  Do you currently have a company or business idea? *
+                </label>
+                <select
+                  id="hasBusinessOrIdea"
+                  name="hasBusinessOrIdea"
+                  value={entrepreneurData.hasBusinessOrIdea}
+                  onChange={handleEntrepreneurInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select an option</option>
+                  <option value="Yes – I have a business">Yes – I have a business</option>
+                  <option value="Yes – I have an idea">Yes – I have an idea</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  What sector is your business or idea in? *
+                </label>
+                <div className="space-y-2">
+                  {[
+                    "Sports & Entertainment",
+                    "Tech / SaaS", 
+                    "Real Estate & Property",
+                    "Consumer Products & Lifestyle Brands",
+                    "Health & Wellness",
+                    "Media & Content Creation",
+                    "Education & Career Development",
+                    "Philanthropic & Social Impact Ventures",
+                    "Legal, Finance & Advisory Services",
+                    "Events & Experiences"
+                  ].map(sector => (
+                    <label key={sector} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="businessSectors"
+                        value={sector}
+                        checked={entrepreneurData.businessSectors.includes(sector)}
+                        onChange={handleEntrepreneurInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="text-sm text-gray-700">{sector}</span>
+                    </label>
+                  ))}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="businessSectors"
+                      value="Other"
+                      checked={entrepreneurData.businessSectors.includes("Other")}
+                      onChange={handleEntrepreneurInputChange}
+                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-700">Other: </span>
+                    <input
+                      type="text"
+                      placeholder="Please specify"
+                      className="ml-2 px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {entrepreneurData.hasBusinessOrIdea === "Yes – I have an idea" && (
+                <div>
+                  <label htmlFor="elevatorPitch" className="block text-sm font-medium text-gray-700 mb-1">
+                    What is your 1–2 sentence elevator pitch? *
+                  </label>
+                  <textarea
+                    id="elevatorPitch"
+                    name="elevatorPitch"
+                    value={entrepreneurData.elevatorPitch}
+                    onChange={handleEntrepreneurInputChange}
+                    required
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  What kind of support are you looking for? *
+                </label>
+                <div className="space-y-2">
+                  {[
+                    "Athlete Endorsements",
+                    "Social Media Promotion from Athletes",
+                    "Product Placement with Athletes", 
+                    "Athlete Brand Ambassadors",
+                    "Athlete Event Appearances",
+                    "Co-branded Campaigns with Athletes",
+                    "Testimonials or Reviews from Athletes",
+                    "Partnerships with Athlete-Run Foundations"
+                  ].map(support => (
+                    <label key={support} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="supportNeeds"
+                        value={support}
+                        checked={entrepreneurData.supportNeeds.includes(support)}
+                        onChange={handleEntrepreneurInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="text-sm text-gray-700">{support}</span>
+                    </label>
+                  ))}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="supportNeeds"
+                      value="Other"
+                      checked={entrepreneurData.supportNeeds.includes("Other")}
+                      onChange={handleEntrepreneurInputChange}
+                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-700">Other: </span>
+                    <input
+                      type="text"
+                      placeholder="Please specify"
+                      className="ml-2 px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="platformGoals" className="block text-sm font-medium text-gray-700 mb-1">
+                  What are you hoping to get out of this platform? *
+                </label>
+                <textarea
+                  id="platformGoals"
+                  name="platformGoals"
+                  value={entrepreneurData.platformGoals}
+                  onChange={handleEntrepreneurInputChange}
+                  required
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition-colors duration-200"
+              >
+                Continue to Profile Setup
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {currentStep === "philanthropic-questionnaire" && (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl">
+            <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Tell us about your philanthropic work</h1>
+            
+            <form onSubmit={handlePhilanthropicSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+              <div>
+                <label htmlFor="philanthropicRoleType" className="block text-sm font-medium text-gray-700 mb-1">
+                  Primary Role Type: *
+                </label>
+                <select
+                  id="philanthropicRoleType"
+                  name="roleType"
+                  value={philanthropicData.roleType}
+                  onChange={handlePhilanthropicInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select role type</option>
+                  <option value="Executive">Executive</option>
+                  <option value="Program Lead">Program Lead</option>
+                  <option value="Founder">Founder</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  What causes does your organization focus on? *
+                </label>
+                <div className="space-y-2">
+                  {[
+                    { name: "Youth Empowerment", description: "Leadership development, access to opportunity, mentorship programs" },
+                    { name: "Mental Health & Wellness", description: "Access to care, athlete mental health, community well-being" },
+                    { name: "Education & Financial Literacy", description: "School programs, scholarships, life skills, entrepreneurship training" },
+                    { name: "Sports Access & Equity", description: "Affordable leagues, equipment donations, inclusion initiatives" },
+                    { name: "Environment & Sustainability", description: "Climate action, green tech, eco-education, community cleanups" },
+                    { name: "Athlete Transition & Career Support", description: "Programs to support life after sports, skills development, reinvention" },
+                    { name: "Health & Physical Fitness", description: "Access to healthcare, fitness programs, nutrition, injury recovery" },
+                    { name: "Arts, Media & Creative Expression", description: "Storytelling, youth media, creative access, athlete-driven media" }
+                  ].map(cause => (
+                    <label key={cause.name} className="flex items-start">
+                      <input
+                        type="checkbox"
+                        name="organizationCauses"
+                        value={cause.name}
+                        checked={philanthropicData.organizationCauses.includes(cause.name)}
+                        onChange={handlePhilanthropicInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1"
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-gray-800">{cause.name}</span>
+                        <span className="text-xs text-gray-600">{cause.description}</span>
+                      </div>
+                    </label>
+                  ))}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="organizationCauses"
+                      value="Other"
+                      checked={philanthropicData.organizationCauses.includes("Other")}
+                      onChange={handlePhilanthropicInputChange}
+                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-700">Other: </span>
+                    <input
+                      type="text"
+                      placeholder="Let us know if your cause isn't listed above"
+                      className="ml-2 px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 flex-1"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  How can others get involved? *
+                </label>
+                <div className="space-y-2">
+                  {[
+                    "Fundraising / Donations",
+                    "Athlete Ambassadors",
+                    "Volunteer Opportunities",
+                    "Strategic Partnerships",
+                    "Board Membership"
+                  ].map(method => (
+                    <label key={method} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="involvementMethods"
+                        value={method}
+                        checked={philanthropicData.involvementMethods.includes(method)}
+                        onChange={handlePhilanthropicInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="text-sm text-gray-700">{method}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Who are you looking to connect with? *
+                </label>
+                <div className="space-y-2">
+                  {[
+                    "Athletes",
+                    "Athlete Managers / Agents",
+                    "Coaches / Trainers",
+                    "Investors",
+                    "Founders",
+                    "Brand Partners",
+                    "Advisors",
+                    "Other Philanthropic Leaders / Nonprofit Executives"
+                  ].map(target => (
+                    <label key={target} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="connectionTargets"
+                        value={target}
+                        checked={philanthropicData.connectionTargets.includes(target)}
+                        onChange={handlePhilanthropicInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="text-sm text-gray-700">{target}</span>
+                    </label>
+                  ))}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="connectionTargets"
+                      value="Other"
+                      checked={philanthropicData.connectionTargets.includes("Other")}
+                      onChange={handlePhilanthropicInputChange}
+                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-700">Other: </span>
+                    <input
+                      type="text"
+                      placeholder="Please specify"
+                      className="ml-2 px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="collaborationInterest" className="block text-sm font-medium text-gray-700 mb-1">
+                  Would you like to collaborate on campaigns, events, or media? *
+                </label>
+                <select
+                  id="collaborationInterest"
+                  name="collaborationInterest"
+                  value={philanthropicData.collaborationInterest}
+                  onChange={handlePhilanthropicInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select an option</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="philanthropicPlatformGoals" className="block text-sm font-medium text-gray-700 mb-1">
+                  What are you hoping to get out of this platform? *
+                </label>
+                <textarea
+                  id="philanthropicPlatformGoals"
+                  name="platformGoals"
+                  value={philanthropicData.platformGoals}
+                  onChange={handlePhilanthropicInputChange}
+                  required
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition-colors duration-200"
+              >
+                Continue to Profile Setup
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {currentStep === "coach-questionnaire" && (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl">
+            <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Tell us about your coaching background</h1>
+            
+            <form onSubmit={handleCoachSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+              <div>
+                <label htmlFor="coachRoleType" className="block text-sm font-medium text-gray-700 mb-1">
+                  Primary Role Type: *
+                </label>
+                <select
+                  id="coachRoleType"
+                  name="roleType"
+                  value={coachData.roleType}
+                  onChange={handleCoachInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select role type</option>
+                  <option value="Coach">Coach</option>
+                  <option value="Trainer">Trainer</option>
+                  <option value="Specialist">Specialist</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  What level(s) do you coach/train at? *
+                </label>
+                <div className="space-y-2">
+                  {[
+                    "Youth",
+                    "Collegiate", 
+                    "Professional",
+                    "Olympic / National",
+                    "Private / 1:1",
+                    "Team / Club / Franchise"
+                  ].map(level => (
+                    <label key={level} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="coachingLevels"
+                        value={level}
+                        checked={coachData.coachingLevels.includes(level)}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="text-sm text-gray-700">{level}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  What sports do you coach/train in? *
+                </label>
+                <div className="space-y-4">
+                  <div>
+                    <label className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        name="sports"
+                        value="Team Ball Sports"
+                        checked={coachData.sports.includes("Team Ball Sports")}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="font-medium text-gray-800">Team Ball Sports</span>
+                    </label>
+                    <p className="text-xs text-gray-600 ml-7 mb-2">Soccer, Football, Basketball, Baseball/Softball, Hockey (Ice, Field, Roller), Rugby, Lacrosse, Handball, Water Polo, Cricket</p>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        name="sports"
+                        value="Track, Field & Endurance Sports"
+                        checked={coachData.sports.includes("Track, Field & Endurance Sports")}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="font-medium text-gray-800">Track, Field & Endurance Sports</span>
+                    </label>
+                    <p className="text-xs text-gray-600 ml-7 mb-2">Track & Field, Cross Country, Road Running/Marathons, Triathlon/Ironman, Swimming, Rowing/Crew, Cycling, Speed Skating, Nordic Skiing/Biathlon</p>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        name="sports"
+                        value="Combat & Strength Sports"
+                        checked={coachData.sports.includes("Combat & Strength Sports")}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="font-medium text-gray-800">Combat & Strength Sports</span>
+                    </label>
+                    <p className="text-xs text-gray-600 ml-7 mb-2">Wrestling, Boxing, MMA/UFC, Judo/Karate/Taekwondo, Powerlifting/Weightlifting, Bodybuilding, Fencing</p>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        name="sports"
+                        value="Precision & Racket Sports"
+                        checked={coachData.sports.includes("Precision & Racket Sports")}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="font-medium text-gray-800">Precision & Racket Sports</span>
+                    </label>
+                    <p className="text-xs text-gray-600 ml-7 mb-2">Tennis, Golf, Pickleball, Table Tennis, Badminton, Archery, Shooting Sports</p>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        name="sports"
+                        value="Extreme & Action Sports"
+                        checked={coachData.sports.includes("Extreme & Action Sports")}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="font-medium text-gray-800">Extreme & Action Sports</span>
+                    </label>
+                    <p className="text-xs text-gray-600 ml-7 mb-2">Skateboarding, BMX, Snowboarding, Skiing (Alpine/Freestyle), Surfing, Motocross, Rock Climbing</p>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        name="sports"
+                        value="Gymnastics & Artistic Sports"
+                        checked={coachData.sports.includes("Gymnastics & Artistic Sports")}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="font-medium text-gray-800">Gymnastics & Artistic Sports</span>
+                    </label>
+                    <p className="text-xs text-gray-600 ml-7 mb-2">Gymnastics, Cheerleading, Dance (Competitive), Figure Skating, Synchronized Swimming, Baton Twirling</p>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        name="sports"
+                        value="Adaptive & Paralympic Sports"
+                        checked={coachData.sports.includes("Adaptive & Paralympic Sports")}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="font-medium text-gray-800">Adaptive & Paralympic Sports</span>
+                    </label>
+                    <p className="text-xs text-gray-600 ml-7 mb-2">Wheelchair Basketball, Para Track & Field, Sitting Volleyball, Blind Soccer, Other</p>
+                  </div>
+
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="sports"
+                      value="Other"
+                      checked={coachData.sports.includes("Other")}
+                      onChange={handleCoachInputChange}
+                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-700">Other / Niche Sports: </span>
+                    <input
+                      type="text"
+                      placeholder="Please specify"
+                      className="ml-2 px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  What are you interested in? *
+                </label>
+                <div className="space-y-2">
+                  {[
+                    "Collaborating with athlete foundations",
+                    "Finding sponsorships",
+                    "Coaching post-retirement athletes",
+                    "Hosting or attending training events",
+                    "Mentoring up-and-coming coaches"
+                  ].map(interest => (
+                    <label key={interest} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="interests"
+                        value={interest}
+                        checked={coachData.interests.includes(interest)}
+                        onChange={handleCoachInputChange}
+                        className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="text-sm text-gray-700">{interest}</span>
+                    </label>
+                  ))}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="interests"
+                      value="Other"
+                      checked={coachData.interests.includes("Other")}
+                      onChange={handleCoachInputChange}
+                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-700">Other: </span>
+                    <input
+                      type="text"
+                      placeholder="Please specify"
+                      className="ml-2 px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="privateTrainingInterest" className="block text-sm font-medium text-gray-700 mb-1">
+                  Would you like to be featured for private training opportunities? *
+                </label>
+                <select
+                  id="privateTrainingInterest"
+                  name="privateTrainingInterest"
+                  value={coachData.privateTrainingInterest}
+                  onChange={handleCoachInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select an option</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="coachPlatformGoals" className="block text-sm font-medium text-gray-700 mb-1">
+                  What are you hoping to get out of this platform? *
+                </label>
+                <textarea
+                  id="coachPlatformGoals"
+                  name="platformGoals"
+                  value={coachData.platformGoals}
+                  onChange={handleCoachInputChange}
                   required
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
