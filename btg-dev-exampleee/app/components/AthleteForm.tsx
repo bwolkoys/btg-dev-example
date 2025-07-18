@@ -50,7 +50,7 @@ export default function AthleteForm({ athleteData, setAthleteData, onSubmit }: A
               value={athleteData.roleType}
               onChange={handleAthleteInputChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Select role type</option>
               <option value="Current">Current</option>
@@ -259,7 +259,7 @@ export default function AthleteForm({ athleteData, setAthleteData, onSubmit }: A
               onChange={handleAthleteInputChange}
               required
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+              className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
             />
           </div>
 

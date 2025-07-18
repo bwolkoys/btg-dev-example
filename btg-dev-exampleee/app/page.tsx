@@ -5,6 +5,7 @@ import VentureCapitalistForm from "./components/VentureCapitalistForm";
 import EntrepreneurForm from "./components/EntrepreneurForm";
 import PhilanthropicLeaderForm from "./components/PhilanthropicLeaderForm";
 import CoachForm from "./components/CoachForm";
+import Dashboard from "./components/Dashboard";
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState("welcome");
@@ -144,13 +145,14 @@ export default function Home() {
       ...(formData.userType === "philanthropic-leader" ? philanthropicData : {}),
       ...(formData.userType === "coach" ? coachData : {})
     });
+    setCurrentStep("dashboard");
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       {currentStep === "welcome" && (
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-8">Welcome</h1>
+          <h1 className="text-4xl font-bold text-gray-800 mb-8">Welcome to Beyond The Game</h1>
         <button
           onClick={() => setCurrentStep("signup")}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200"
@@ -185,7 +187,7 @@ export default function Home() {
                   value={formData.firstName}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -200,7 +202,7 @@ export default function Home() {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -215,7 +217,7 @@ export default function Home() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -229,7 +231,7 @@ export default function Home() {
                   name="linkedinOrWebsite"
                   value={formData.linkedinOrWebsite}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -243,7 +245,7 @@ export default function Home() {
                   name="inviteCode"
                   value={formData.inviteCode}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -257,7 +259,7 @@ export default function Home() {
                   value={formData.userType}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Select an option</option>
                   <option value="athlete">Athlete (current or former)</option>
@@ -279,7 +281,7 @@ export default function Home() {
                   onChange={handleInputChange}
                   required
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
                 />
               </div>
 
@@ -351,7 +353,7 @@ export default function Home() {
                   value={profileData.username}
                   onChange={handleProfileInputChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -366,7 +368,7 @@ export default function Home() {
                   value={profileData.password}
                   onChange={handleProfileInputChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -381,7 +383,7 @@ export default function Home() {
                   value={profileData.confirmPassword}
                   onChange={handleProfileInputChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -438,6 +440,27 @@ export default function Home() {
             </form>
           </div>
         </div>
+      )}
+
+      {currentStep === "dashboard" && (
+        <Dashboard 
+          userProfile={{
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            profilePhoto: profileData.profilePhoto,
+            userType: formData.userType
+          }}
+          formData={formData}
+          profileData={profileData}
+          specificData={
+            formData.userType === "athlete" ? athleteData :
+            formData.userType === "venture-capitalist" ? investorData :
+            formData.userType === "business-owner" ? entrepreneurData :
+            formData.userType === "philanthropic-leader" ? philanthropicData :
+            formData.userType === "coach" ? coachData :
+            null
+          }
+        />
       )}
     </div>
   );
