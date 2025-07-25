@@ -68,7 +68,7 @@ export default function Dashboard({ userProfile, formData, profileData, specific
 
   const navItems = [
     { id: "home", label: "Home", active: activeTab === "home" },
-    { id: "network", label: "My Network", active: activeTab === "network" },
+    { id: "contacts", label: "My Contacts", active: activeTab === "contacts" },
     { id: "messages", label: "Messages", active: activeTab === "messages" },
     { id: "notifications", label: "Notifications", active: activeTab === "notifications" },
     { id: "profile", label: "Profile", active: activeTab === "profile" }
@@ -487,7 +487,7 @@ export default function Dashboard({ userProfile, formData, profileData, specific
         {(activeTab !== "home" && activeTab !== "profile") && (
           <div className="bg-white rounded-lg shadow-sm p-8 text-center">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4 capitalize">
-              {activeTab === "network" ? "My Network" : activeTab}
+              {activeTab === "contacts" ? "My Contacts" : activeTab}
             </h2>
             <p className="text-gray-600">
               This section is coming soon. Stay tuned for updates!
